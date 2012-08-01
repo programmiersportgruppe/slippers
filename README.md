@@ -1,13 +1,15 @@
 # Getting started
 
+```bash
+gem install slippers
+```
 
-    gem install slippers
-
-    require 'slippers'
-    template = "This is a string without any holes in it"
-    engine = Slippers::Engine.new(template)
-    engine.render #=> "This is a string without any holes in it"
-
+```ruby
+require 'slippers'
+template = "This is a string without any holes in it"
+engine = Slippers::Engine.new(template)
+engine.render #=> "This is a string without any holes in it"
+```
 
 # Philosophy
 
@@ -21,68 +23,80 @@ Introducing...Slippers, a strict template engine for ruby. Slippers supports the
 
 ## Rendering template of a string without any holes
 
-    template = "This is a string without any holes in it"
-    engine = Slippers::Engine.new(template)
-    engine.render #=> "This is a string without any holes in it"
-
+```ruby
+template = "This is a string without any holes in it"
+engine = Slippers::Engine.new(template)
+engine.render #=> "This is a string without any holes in it"
+```
 ## Filling in a hole within a template
 
-    template = "This is a string with a message of $message$"
-    engine = Slippers::Engine.new(template)
-    engine.render(:message => "hello world") #=> "This is a string with a message of hello world"
+```ruby
+template = "This is a string with a message of $message$"
+engine = Slippers::Engine.new(template)
+engine.render(:message => "hello world") ```
+
+    #=> "This is a string with a message of hello world"
 
 ## Rendering a subtemplate within a template
 
-    subtemplate = Slippers::Template.new("this is a subtemplate")
-    template_group = Slippers::TemplateGroup.new(:templates => {:message => subtemplate})
-    template = "This is a template and then $message()$"
-    engine = Slippers::Engine.new(template, :template_group => template_group)
-    engine.render #=> "This is a template and then this is a subtemplate"
+```ruby
+subtemplate = Slippers::Template.new("this is a subtemplate")
+template_group = Slippers::TemplateGroup.new(:templates => {:message => subtemplate})
+template = "This is a template and then $message()$"
+engine = Slippers::Engine.new(template, :template_group => template_group)
+engine.render ```
+
+    #=> "This is a template and then this is a subtemplate"
 
 ## Applying an object to a subtemplate
 
-    subtemplate = Slippers::Template.new("this is a subtemplate with a message of $saying$")
-    template_group = Slippers::TemplateGroup.new(:templates => {:message_subtemplate => subtemplate})
-    template = "This is a template and then $message:message_subtemplate()$!"
-    engine = Slippers::Engine.new(template, :template_group => template_group)
-    engine.render(:message => {:saying => 'hello world'})
-
+```ruby
+subtemplate = Slippers::Template.new("this is a subtemplate with a message of $saying$")
+template_group = Slippers::TemplateGroup.new(:templates => {:message_subtemplate => subtemplate})
+template = "This is a template and then $message:message_subtemplate()$!"
+engine = Slippers::Engine.new(template, :template_group => template_group)
+engine.render(:message => {:saying => 'hello world'})
+```
     #=> "This is a template and then this is a subtemplate with a message of hello world!"
 
 ## Applying an object to an anonymous subtemplate
 
-    template = "This is a template and then $message:{this is a subtemplate with a message of $saying$}$!"
-    engine = Slippers::Engine.new(template)
-    engine.render(:message => {:saying => 'hello world'})
-
+```ruby
+template = "This is a template and then $message:{this is a subtemplate with a message of $saying$}$!"
+engine = Slippers::Engine.new(template)
+engine.render(:message => {:saying => 'hello world'})
+```
     #=> "This is a template and then this is a subtemplate with a message of hello world!"
 
 ## Render a subtemplate using a different rendering technology
 
-    age_renderer = AgeRenderer.new
-	subtemplate = Slippers::Engine.new('$first$ $last$')
-	person = OpenStruct.new({:name => {:first => 'Fred', :last => 'Flinstone'}, :dob => Date.new(DateTime.now.year - 34, 2, 4)})
-	template_group = Slippers::TemplateGroup.new(:templates => {:name => subtemplate, :age => age_renderer})
-	engine = Slippers::Engine.new("Introducing $name:name()$ who is $dob:age()$.", :template_group => template_group)
-	engine.render(person)
-
+```ruby
+age_renderer = AgeRenderer.new
+subtemplate = Slippers::Engine.new('$first$ $last$')
+person = OpenStruct.new({:name => {:first => 'Fred', :last => 'Flinstone'}, :dob => Date.new(DateTime.now.year - 34, 2, 4)})
+template_group = Slippers::TemplateGroup.new(:templates => {:name => subtemplate, :age => age_renderer})
+engine = Slippers::Engine.new("Introducing $name:name()$ who is $dob:age()$.", :template_group => template_group)
+engine.render(person)
+```
     #=> "Introducing Fred Flinstone who is 34 years old."
 
 ## Select a renderer based on the type of the object to render
 
-    person = OpenStruct.new({:name => {:first => 'Fred', :last => 'Flinstone'}, :dob => Date.new(DateTime.now.year-34, 2, 4)})
-    template_group = Slippers::TemplateGroup.new(:templates => {:name => Slippers::Engine.new('$first$ $last$'), Date => AgeRenderer.new})
-    engine = Slippers::Engine.new("Introducing $name:name()$ who is $dob$.", :template_group => template_group)
-    engine.render(person)
-
+```ruby
+person = OpenStruct.new({:name => {:first => 'Fred', :last => 'Flinstone'}, :dob => Date.new(DateTime.now.year-34, 2, 4)})
+template_group = Slippers::TemplateGroup.new(:templates => {:name => Slippers::Engine.new('$first$ $last$'), Date => AgeRenderer.new})
+engine = Slippers::Engine.new("Introducing $name:name()$ who is $dob$.", :template_group => template_group)
+engine.render(person)
+```
     #=> "Introducing Fred Flinstone who is 34 years old."
 
 ## Use the specified expression options to render list items
 
-    template = 'This is a list of values $values; null="-1", seperator=", "$'
-    engine = Slippers::Engine.new(template)
-    engine.render(:values => [1,2,3,nil])
-
+```ruby
+template = 'This is a list of values $values; null="-1", seperator=", "$'
+engine = Slippers::Engine.new(template)
+engine.render(:values => [1,2,3,nil])
+```
     #=> "This is a list of values 1, 2, 3, -1"
 
 
