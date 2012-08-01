@@ -26,14 +26,17 @@ Introducing...Slippers, a strict template engine for ruby. Slippers supports the
 ```ruby
 template = "This is a string without any holes in it"
 engine = Slippers::Engine.new(template)
-engine.render #=> "This is a string without any holes in it"
+engine.render
 ```
+    #=> "This is a string without any holes in it"
+
 ## Filling in a hole within a template
 
 ```ruby
 template = "This is a string with a message of $message$"
 engine = Slippers::Engine.new(template)
-engine.render(:message => "hello world") ```
+engine.render(:message => "hello world")
+```
 
     #=> "This is a string with a message of hello world"
 
@@ -44,7 +47,8 @@ subtemplate = Slippers::Template.new("this is a subtemplate")
 template_group = Slippers::TemplateGroup.new(:templates => {:message => subtemplate})
 template = "This is a template and then $message()$"
 engine = Slippers::Engine.new(template, :template_group => template_group)
-engine.render ```
+engine.render
+```
 
     #=> "This is a template and then this is a subtemplate"
 
